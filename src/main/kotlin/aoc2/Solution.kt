@@ -9,12 +9,12 @@ val losingMoveMap = mapOf("A" to "C", "B" to "A", "C" to "B")
 val winningMoveMap = mapOf("A" to "B", "B" to "C", "C" to "A")
 
 fun main() {
-    val input = readFile("src/aoc1.main/kotlin/aoc2/input.txt")
+    val input = readFile("src/main/kotlin/aoc2/input.txt")
 
     val moves = input.split("\n").map { it.split(" ") }
-    val moves2 = input.split("\n").map { it.split(" ") }
+
     val score = moves.sumOf { calculateScore(it) + scoreMap[scoreConvertMap[it[1]]]!! }
-    val score2 = moves2.sumOf { calculateScore2(it) + outcomeMap[it[1]]!! }
+    val score2 = moves.sumOf { calculateScore2(it) + outcomeMap[it[1]]!! }
 
     println(score)
     println(score2)
