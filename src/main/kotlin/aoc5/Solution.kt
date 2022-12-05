@@ -19,7 +19,7 @@ fun initStacks(): Map<Int, ArrayDeque<String>> {
 fun main() {
 
     val input = readFile("src/main/kotlin/aoc5/input.txt")
-    val stack = initStacks()
+    var stack = initStacks()
 
     input.split("\n").map { it.split(" ").filter { it.matches(Regex("\\d+")) } }.map { it.map { it.toInt() } }
         .map { c ->
@@ -31,6 +31,16 @@ fun main() {
     val result = String(stack.values.map { it.last() }.map { it.toCharArray().first() }.toCharArray())
 
     println(result)
+
+    stack = initStacks()
+
+    input.split("\n").map { it.split(" ").filter { it.matches(Regex("\\d+")) } }.map { it.map { it.toInt() } }
+        .map { c -> moveNStacks(stack, c[0], c[1], c[2]) }
+
+    val result2 = String(stack.values.map { it.last() }.map { it.toCharArray().first() }.toCharArray())
+
+    println(result2)
+
 }
 
 fun moveStack(stack: Map<Int, ArrayDeque<String>>, from: Int, to: Int) {
@@ -39,8 +49,13 @@ fun moveStack(stack: Map<Int, ArrayDeque<String>>, from: Int, to: Int) {
 }
 
 fun moveNStacks(stack: Map<Int, ArrayDeque<String>>, count: Int, from: Int, to: Int) {
-    val item = stack[from]!!.removeLast()
-    stack[to]!!.addLast(item)
+    val toMove = ArrayDeque<String>()
+    repeat(count) {
+        toMove.addLast(stack[from]!!.removeLast())
+    }
+    repeat(count) {
+        stack[to]!!.addLast(toMove.removeLast())
+    }
 }
 
 fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
