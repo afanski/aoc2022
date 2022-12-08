@@ -55,7 +55,7 @@ fun main() {
         }
     }
 
-    val result = visible.map { it.sum()  }.sum()
+    val result = visible.sumOf { it.sum() }
     println(result)
 
     val distances: Array<IntArray> = Array(lines.size) { IntArray(lines.size) }
