@@ -1,6 +1,8 @@
 package aoc8
 
 import java.io.File
+import java.lang.Math.max
+import java.lang.Math.min
 
 fun main() {
     val input = readFile("src/main/kotlin/aoc8/input.txt")
@@ -59,6 +61,40 @@ fun main() {
     println(visible)
     val result = visible.map { it.sum()  }.sum()
     println(result)
+
+    val distances: Array<IntArray> = Array(lines.size) { IntArray(lines.size) }
+    matrix.forEachIndexed { i, e ->
+        e.forEachIndexed { j, e2 ->
+            var il = max(i - 1, 0)
+            while (il > 0 && matrix[il][j] < matrix[i][j]) {
+                il--
+            }
+            val distanceLeft = i - il
+
+            var ir = min(i + 1, lines.size - 1)
+            while (ir < lines.size - 1 && matrix[ir][j] < matrix[i][j]) {
+                ir++
+            }
+            val distanceRight = ir - i
+
+            var jt = max(j - 1, 0)
+            while (jt > 0 && matrix[i][jt] < matrix[i][j]) {
+                jt--
+            }
+            val distanceTop = j - jt
+
+            var jb = min(j + 1, lines.size - 1)
+            while (jb < lines.size - 1 && matrix[i][jb] < matrix[i][j]) {
+                jb++
+            }
+            val distanceBottom = jb - j
+
+            distances[i][j] = distanceBottom * distanceTop * distanceLeft * distanceRight
+        }
+    }
+
+    val result2 = distances.map { it.max() }.max()
+    println(result2)
 }
 
 
