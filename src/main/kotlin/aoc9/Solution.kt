@@ -34,22 +34,18 @@ class RopeNode {
 
     private fun moveHeadUp() {
         findHead().y++
-        moveTail()
     }
 
     private fun moveHeadDown() {
         findHead().y--
-        moveTail()
     }
 
     private fun moveHeadLeft() {
         findHead().x--
-        moveTail()
     }
 
     private fun moveHeadRight() {
         findHead().x++
-        moveTail()
     }
 
     private fun findHead(): RopeNode {
@@ -67,15 +63,26 @@ class RopeNode {
             "L" -> moveHeadLeft()
             "R" -> moveHeadRight()
         }
+        moveTail()
     }
+}
+
+fun initRope(size: Int): RopeNode {
+    var tail = RopeNode(null)
+    var currentSize = 1
+    while (currentSize < size) {
+        tail = RopeNode(tail)
+        currentSize++
+    }
+    return tail
 }
 
 fun main() {
     val input = readFile("src/main/kotlin/aoc9/input.txt")
     val commands = input.split("\n").map { it.split(" ") }
 
-    val rope10 = RopeNode(RopeNode(RopeNode(RopeNode(RopeNode(RopeNode(RopeNode(RopeNode(RopeNode(RopeNode(null))))))))))
-    val rope2 = RopeNode(RopeNode( null))
+    val rope10 = initRope(10)
+    val rope2 = initRope(2)
 
     commands.forEach {
         val direction = it.first()
