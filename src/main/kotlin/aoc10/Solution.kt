@@ -3,20 +3,37 @@ package aoc10
 import java.io.File
 
 class CPU {
-    private var cycle = 1
+    private var cycle = 0
     private var x = 1
     var strength = 0;
+    private var row: String = ""
 
     fun run(command: String, param: Int?) {
         if (command == "noop") {
+            printCrt()
             cycle++
             recordStrength()
         } else {
+            printCrt()
             cycle++
             recordStrength()
+            printCrt()
             cycle++
             x+=param!!
             recordStrength()
+        }
+    }
+
+    private fun printCrt() {
+        val pos = cycle % 40
+        if (sprite().contains(pos)) {
+            row = row + "#"
+        } else {
+            row = row + "."
+        }
+        if (row.length == 40) {
+            println(row)
+            row = ""
         }
     }
 
@@ -26,6 +43,16 @@ class CPU {
         } else if ((cycle-20) % 40 == 0) {
             strength += cycle * x
         }
+    }
+
+    private fun sprite(): List<Int> {
+        if (x == 0) {
+            return listOf(0, 1, 2)
+        }
+        if (x == 39) {
+            return listOf(37, 38, 39)
+        }
+        return listOf(x - 1, x, x + 1)
     }
 }
 
