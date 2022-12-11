@@ -1,31 +1,32 @@
 package aoc11
 
 import java.io.File
+import java.math.BigInteger
 import java.time.Month
 
 class Monkey {
     var index: Int = 0
-    var items: MutableList<Int> = mutableListOf()
-    var testDivisible: Int = 0
-    var throwIfTrue = 0
-    var throwIfFalse = 0
+    var items: MutableList<BigInteger> = mutableListOf()
+    var testDivisible: BigInteger = BigInteger.ZERO
+    var throwIfTrue = BigInteger.ZERO
+    var throwIfFalse = BigInteger.ZERO
     var operation: String = ""
-    var inspected = 0
+    var inspected = BigInteger.ZERO
 
-    fun runOperation(item: Int): Int {
+    fun runOperation(item: BigInteger): BigInteger {
         val operations = operation.split(" ")
-        var result = 0
-        var first = 0
-        var second = 0
+        var result = BigInteger.ZERO
+        var first = BigInteger.ZERO
+        var second = BigInteger.ZERO
         if (operations[0] == "old") {
             first = item
         } else {
-            first = operations[0].toInt()
+            first = operations[0].toBigInteger()
         }
         if (operations[2] == "old") {
             second = item
         } else {
-            second = operations[2].toInt()
+            second = operations[2].toBigInteger()
         }
         if (operations[1] == "+") {
             result = first + second
@@ -47,34 +48,43 @@ fun main() {
             if (it.startsWith("Monkey ")) {
                 monkey.index = it.filter { it.isDigit() }.toInt()
             } else if (it.startsWith("  Starting items: ")) {
-                monkey.items = it.substringAfter("Starting items: ").split(",").map { s -> s.trim().toInt() } as MutableList<Int>
+                monkey.items = it.substringAfter("Starting items: ").split(",").map { s -> s.trim().toBigInteger() } as MutableList<BigInteger>
             } else if (it.startsWith("  Operation")) {
                 monkey.operation = it.substringAfter("Operation: new = ")
             } else if (it.startsWith("  Test: ")) {
-                monkey.testDivisible = it.filter { it.isDigit() }.toInt()
+                monkey.testDivisible = it.filter { it.isDigit() }.toBigInteger()
             } else if (it.startsWith("    If true:")) {
-                monkey.throwIfTrue = it.filter { it.isDigit() }.toInt()
+                monkey.throwIfTrue = it.filter { it.isDigit() }.toBigInteger()
             } else if (it.startsWith("    If false:")) {
-                monkey.throwIfFalse = it.filter { it.isDigit() }.toInt()
+                monkey.throwIfFalse = it.filter { it.isDigit() }.toBigInteger()
             }
         }
         parsedMonkeys.add(monkey)
     }
 
-    repeat(20) {
+    val allTests = parsedMonkeys.map { it.testDivisible }.reduce { acc, i -> acc * i }
+
+    var round = 0
+    repeat(10000) {
+        round++
         parsedMonkeys.forEach {
             it.items.forEachIndexed { index, item ->
                 run {
-                    var newLevel = it.runOperation(item) / 3
-                    if (newLevel % it.testDivisible == 0) {
-                        parsedMonkeys[it.throwIfTrue].items.add(newLevel)
+                    var newLevel = it.runOperation(item)
+                    if (newLevel % it.testDivisible == BigInteger.ZERO) {
+                        val target = parsedMonkeys[it.throwIfTrue.toInt()]
+                        target.items.add(newLevel % allTests)
                     } else {
-                        parsedMonkeys[it.throwIfFalse].items.add(newLevel)
+                        val target = parsedMonkeys[it.throwIfFalse.toInt()]
+                        target.items.add(newLevel % allTests)
                     }
                     it.inspected++
                 }
             }
             it.items = mutableListOf()
+        }
+        if (round % 1000 == 0) {
+            println("Round $round. Levels: ${parsedMonkeys.map { it.inspected }}")
         }
     }
 
