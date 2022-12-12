@@ -9,7 +9,6 @@ var endY = 0
 var X = 0
 var Y = 0
 var array = Array(1) { IntArray(1) }
-var min = Int.MAX_VALUE
 
 fun main() {
     val input = readFile("src/main/kotlin/aoc12/input.txt")
@@ -25,32 +24,22 @@ fun main() {
             r.forEachIndexed { index2, h ->
                 run {
                     if (h == 'S') {
-                        array[index][index2] = 1
+                        array[index][index2] = 0
+                        startX = index
+                        startY = index2
                     } else if (h == 'E') {
                         array[index][index2] = 'z'.code - 'a'.code + 2
+                        endX = index
+                        endY = index2
+                    } else {
+                        array[index][index2] = h.code - 'a'.code + 1
                     }
-                    array[index][index2] = h.code - 'a'.code + 1
                 }
             }
         }
     }
 
-    for (i in 0..rows.size - 1) {
-        for (j in 0..rows.first().length - 1) {
-            if (array[i][j] == -13) {
-                startX = i
-                startY = j
-                array[i][j] = 0
-            }
-            if (array[i][j] == -27) {
-                endX = i
-                endY = j
-                array[i][j] = 'z'.code - 'a'.code + 2
-            }
-        }
-    }
-
-    var starts = mutableSetOf<Pair<Int, Int>>()
+    val starts = mutableSetOf<Pair<Int, Int>>()
     rows.forEachIndexed { index, r ->
         run {
             r.forEachIndexed { index2, h ->
@@ -63,13 +52,13 @@ fun main() {
         }
     }
 
-    println(array)
-    val minDistances = starts.map { processPath(it) }
+    println(findPath(Pair(startX, startY)))
 
+    val minDistances = starts.map { findPath(it) }
     println(minDistances.filter { it > 0 }.min())
 }
 
-fun processPath(start: Pair<Int, Int>): Int {
+fun findPath(start: Pair<Int, Int>): Int {
     val queue = mutableListOf<Pair<Int, Int>>()
     val seen = mutableSetOf<Pair<Int, Int>>()
     val distances = Array(X) { IntArray(Y) }
@@ -101,7 +90,7 @@ private fun process(
     distance: Int,
     current: Pair<Int, Int>
 ) {
-    if (checkIJ(i, j) && array[i][j] - array[current.first][current.second] <= 1) {
+    if (checkRange(i, j) && array[i][j] - array[current.first][current.second] <= 1) {
         distances[i][j] = distance + 1
         if (!seen.contains(Pair(i, j))) {
             queue.add(Pair(i, j))
@@ -111,7 +100,7 @@ private fun process(
 }
 
 
-fun checkIJ(i: Int, j: Int): Boolean {
+fun checkRange(i: Int, j: Int): Boolean {
     return !(i < 0 || j < 0 || i >= X || j >= Y)
 }
 
