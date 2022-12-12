@@ -1,7 +1,6 @@
 package aoc12
 
 import java.io.File
-import kotlin.math.min
 
 var startX = 0
 var startY = 0
@@ -68,7 +67,6 @@ fun main() {
     val minDistances = starts.map { processPath(it) }
 
     println(minDistances.filter { it > 0 }.min())
-//    println(findPath(startX, startY, 0, mutableSetOf(), mutableListOf()))
 }
 
 fun processPath(start: Pair<Int, Int>): Int {
