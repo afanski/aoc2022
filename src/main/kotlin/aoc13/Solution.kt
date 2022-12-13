@@ -4,13 +4,22 @@ import java.io.File
 import java.lang.Math.max
 
 fun main() {
-    val input = readFile("src/main/kotlin/aoc13/input2.txt")
+    val input = readFile("src/main/kotlin/aoc13/input.txt")
     val packets = input.split("\n\n").map { it.split("\n") }
     println(packets)
 
-    val result = packets.map {
+    val orders = packets.map {
         val (left, right) = it
         compareElements(left, right)
+    }
+
+    var result = 0
+    orders.forEachIndexed { i, value ->
+        run {
+            if (value != null && value) {
+                result += i + 1
+            }
+        }
     }
     println(result)
 }
@@ -31,6 +40,12 @@ fun compareElements(first: String, second: String): Boolean? {
 
         var left = remainingItems(first)
         var right = remainingItems(second)
+
+        if (item1.isEmpty() && item2.isNotEmpty()) {
+            return true
+        } else if (item1.isNotEmpty() && item2.isEmpty()) {
+            return false
+        }
 
         while (item1 != "" && item2 != "") {
             if (item1 == item2) {
