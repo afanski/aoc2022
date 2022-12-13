@@ -74,16 +74,6 @@ fun compareElements(first: String, second: String): Boolean? {
     }
 }
 
-fun firstItem(list: String): String {
-    val removedBraces = removeBraces(list)
-    if (removedBraces.startsWith("[")) {
-        return removedBraces.substringBefore("]") + "]"
-    } else if (!removedBraces.contains(",")) {
-        return removedBraces
-    }
-    return removedBraces.substringBefore(",")
-}
-
 fun firstItemNew(list: String): String {
     if (removeBraces(list).all { it.isDigit() }) return removeBraces(list)
     var braces = 0
@@ -104,19 +94,6 @@ fun firstItemNew(list: String): String {
     return removeBraces(list)
 }
 
-fun remainingItems(list: String): String {
-    val removedBraces = removeBraces(list)
-    if (removedBraces.startsWith("[")) {
-        var result = removedBraces.substringAfter("]")
-        if (result.startsWith(",")) {
-            result = result.substringAfter(",")
-        }
-        return result
-    } else if (!removedBraces.contains(",")) {
-        return ""
-    }
-    return removedBraces.substringAfter(",")
-}
 fun remainingItemsNew(list: String): String {
     var braces = 0
     var index = 1
