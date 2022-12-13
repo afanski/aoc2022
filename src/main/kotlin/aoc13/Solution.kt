@@ -18,7 +18,7 @@ fun main() {
     var result = 0
     orders.forEachIndexed { i, value ->
         run {
-            if (value != null && value) {
+            if (value!!) {
                 result += i + 1
             }
         }
@@ -50,28 +50,19 @@ fun compareElements(first: String, second: String): Boolean? {
         }
 
         while (item1 != "" && item2 != "") {
-            if (item1 == item2) {
+            val comparisonResult = compareElements(item1, item2)
+            if (comparisonResult == null) {
                 item1 = firstItemNew(left)
                 item2 = firstItemNew(right)
 
-                if (left.isEmpty()) {
+                if (item1.isEmpty() && item2.isNotEmpty()) {
                     return true
-                } else if (right.isEmpty()) {
+                } else if (item1.isNotEmpty() && item2.isEmpty()) {
                     return false
                 }
 
                 left = remainingItemsNew(left)
                 right = remainingItemsNew(right)
-                continue
-            }
-
-            val comparisonResult = compareElements(item1, item2)
-            if (comparisonResult == null) {
-                item1 = left.substringBefore(",")
-                item2 = right.substringBefore(",")
-
-                left = left.substringAfter(",")
-                right = right.substringAfter(",")
                 continue
             } else {
                 return comparisonResult
