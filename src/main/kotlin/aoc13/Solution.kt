@@ -4,7 +4,7 @@ import java.io.File
 import java.lang.Math.max
 
 fun main() {
-    val input = readFile("src/main/kotlin/aoc13/input2.txt")
+    val input = readFile("src/main/kotlin/aoc13/input3.txt")
     val packets = input.split("\n\n").map { it.split("\n") }
     println(packets)
 
@@ -94,6 +94,7 @@ fun firstItem(list: String): String {
 }
 
 fun firstItemNew(list: String): String {
+    if (removeBraces(list).all { it.isDigit() }) return removeBraces(list)
     var braces = 0
     var index = 1
     while (braces > 0 || index < list.length - 1) {
@@ -109,7 +110,7 @@ fun firstItemNew(list: String): String {
     if (index == 1) {
         println("yo")
     }
-    return list.substring(0, index)
+    return removeBraces(list)
 }
 
 fun remainingItems(list: String): String {
