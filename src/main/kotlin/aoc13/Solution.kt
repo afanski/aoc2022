@@ -13,6 +13,8 @@ fun main() {
         compareElements(left, right)
     }
 
+    println(orders)
+
     var result = 0
     orders.forEachIndexed { i, value ->
         run {
@@ -35,11 +37,11 @@ fun compareElements(first: String, second: String): Boolean? {
     } else if (isNumber(first) && isList(second)) {
         return compareElements("[$first]", second)
     } else if (isList(first) && isList(second)) {
-        var item1 = firstItem(first)
-        var item2 = firstItem(second)
+        var item1 = firstItemNew(first)
+        var item2 = firstItemNew(second)
 
-        var left = remainingItems(first)
-        var right = remainingItems(second)
+        var left = remainingItemsNew(first)
+        var right = remainingItemsNew(second)
 
         if (item1.isEmpty() && item2.isNotEmpty()) {
             return true
@@ -49,8 +51,8 @@ fun compareElements(first: String, second: String): Boolean? {
 
         while (item1 != "" && item2 != "") {
             if (item1 == item2) {
-                item1 = if (left.startsWith("[")) left.substringBefore("]") + "]" else left.substringBefore(",")
-                item2 = if (right.startsWith("[")) right.substringBefore("]") + "]" else right.substringBefore(",")
+                item1 = firstItemNew(left)
+                item2 = firstItemNew(right)
 
                 if (left.isEmpty()) {
                     return true
@@ -58,8 +60,8 @@ fun compareElements(first: String, second: String): Boolean? {
                     return false
                 }
 
-                left = if (left.startsWith("[")) left.substringAfter("]") else left.substringAfter(",", "")
-                right = if (right.startsWith("[")) right.substringAfter("]") else right.substringAfter(",", "")
+                left = remainingItemsNew(left)
+                right = remainingItemsNew(right)
                 continue
             }
 
@@ -91,6 +93,25 @@ fun firstItem(list: String): String {
     return removedBraces.substringBefore(",")
 }
 
+fun firstItemNew(list: String): String {
+    if (list.all { it.isDigit() }) return list
+    val removedBraces = removeBraces(list)
+    if (removedBraces.all { it.isDigit() }) return removedBraces
+    var braces = 0
+    var index = 0
+    while (braces > 0 || index < removedBraces.length - 1) {
+        if (removedBraces[index] == '[') {
+            braces++
+        } else if (removedBraces[index] == ']') {
+            braces--
+        } else if (braces == 0 && removedBraces[index] == ',') {
+            return removedBraces.substring(0, index)
+        }
+        index++
+    }
+    return removedBraces.substring(0, index)
+}
+
 fun remainingItems(list: String): String {
     val removedBraces = removeBraces(list)
     if (removedBraces.startsWith("[")) {
@@ -104,6 +125,22 @@ fun remainingItems(list: String): String {
     }
     return removedBraces.substringAfter(",")
 }
+fun remainingItemsNew(list: String): String {
+    val removedBraces = removeBraces(list)
+    var braces = 0
+    var index = 0
+    while (braces > 0 || index < removedBraces.length - 1) {
+        if (removedBraces[index] == '[') {
+            braces++
+        } else if (removedBraces[index] == ']') {
+            braces--
+        } else if (braces == 0 && removedBraces[index] == ',') {
+            return removedBraces.substring(index + 1)
+        }
+        index++
+    }
+    return list
+}
 
 fun isNumber(input: String): Boolean {
     return input.all { it.isDigit() }
@@ -115,10 +152,8 @@ fun isList(input: String): Boolean {
 
 fun removeBraces(input: String): String {
     var result = input
-    if (result.startsWith("[")) {
+    if (result.startsWith("[") && result.endsWith("]")) {
         result = result.substringAfter("[")
-    }
-    if (result.endsWith("]")) {
         result = result.substringBeforeLast("]")
     }
     return result
