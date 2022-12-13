@@ -4,7 +4,7 @@ import java.io.File
 import java.lang.Math.max
 
 fun main() {
-    val input = readFile("src/main/kotlin/aoc13/input.txt")
+    val input = readFile("src/main/kotlin/aoc13/input2.txt")
     val packets = input.split("\n\n").map { it.split("\n") }
     println(packets)
 
@@ -94,22 +94,22 @@ fun firstItem(list: String): String {
 }
 
 fun firstItemNew(list: String): String {
-    if (list.all { it.isDigit() }) return list
-    val removedBraces = removeBraces(list)
-    if (removedBraces.all { it.isDigit() }) return removedBraces
     var braces = 0
-    var index = 0
-    while (braces > 0 || index < removedBraces.length - 1) {
-        if (removedBraces[index] == '[') {
+    var index = 1
+    while (braces > 0 || index < list.length - 1) {
+        if (list[index] == '[') {
             braces++
-        } else if (removedBraces[index] == ']') {
+        } else if (list[index] == ']') {
             braces--
-        } else if (braces == 0 && removedBraces[index] == ',') {
-            return removedBraces.substring(0, index)
+        } else if (braces == 0 && list[index] == ',') {
+            return list.substring(1, index)
         }
         index++
     }
-    return removedBraces.substring(0, index)
+    if (index == 1) {
+        println("yo")
+    }
+    return list.substring(0, index)
 }
 
 fun remainingItems(list: String): String {
@@ -126,16 +126,19 @@ fun remainingItems(list: String): String {
     return removedBraces.substringAfter(",")
 }
 fun remainingItemsNew(list: String): String {
-    val removedBraces = removeBraces(list)
     var braces = 0
-    var index = 0
-    while (braces > 0 || index < removedBraces.length - 1) {
-        if (removedBraces[index] == '[') {
+    var index = 1
+    while (braces > 0 || index < list.length - 1) {
+        if (list[index] == '[') {
             braces++
-        } else if (removedBraces[index] == ']') {
+        } else if (list[index] == ']') {
             braces--
-        } else if (braces == 0 && removedBraces[index] == ',') {
-            return removedBraces.substring(index + 1)
+        }
+        if (braces == 0) {
+            return list.substring(index, list.length - 1)
+        }
+        if (braces == 0 && list[index] == ',') {
+            return list.substring(index + 1, list.length - 1)
         }
         index++
     }
