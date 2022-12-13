@@ -4,7 +4,7 @@ import java.io.File
 import java.lang.Math.max
 
 fun main() {
-    val input = readFile("src/main/kotlin/aoc13/input3.txt")
+    val input = readFile("src/main/kotlin/aoc13/input.txt")
     val packets = input.split("\n\n").map { it.split("\n") }
     println(packets)
 
@@ -139,7 +139,7 @@ fun remainingItemsNew(list: String): String {
         }
         index++
     }
-    return list
+    return ""
 }
 
 fun isNumber(input: String): Boolean {
