@@ -1,7 +1,6 @@
 package aoc13
 
 import java.io.File
-import java.lang.Math.max
 
 fun main() {
     val input = readFile("src/main/kotlin/aoc13/input.txt")
@@ -87,9 +86,6 @@ fun firstItemNew(list: String): String {
             return list.substring(1, index)
         }
         index++
-    }
-    if (index == 1) {
-        println("yo")
     }
     return removeBraces(list)
 }
