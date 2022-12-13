@@ -29,16 +29,22 @@ fun compareElements(first: String, second: String): Boolean? {
         var item1 = firstItem(first)
         var item2 = firstItem(second)
 
-        var left = remainingItems(removeBraces(first))
-        var right = remainingItems(removeBraces(second))
+        var left = remainingItems(first)
+        var right = remainingItems(second)
 
         while (item1 != "" && item2 != "") {
             if (item1 == item2) {
                 item1 = if (left.startsWith("[")) left.substringBefore("]") + "]" else left.substringBefore(",")
                 item2 = if (right.startsWith("[")) right.substringBefore("]") + "]" else right.substringBefore(",")
 
-                left = if (left.startsWith("[")) left.substringAfter("]") else left.substringAfter(",")
-                right = if (right.startsWith("[")) right.substringAfter("]") else right.substringAfter(",")
+                if (left.isEmpty()) {
+                    return true
+                } else if (right.isEmpty()) {
+                    return false
+                }
+
+                left = if (left.startsWith("[")) left.substringAfter("]") else left.substringAfter(",", "")
+                right = if (right.startsWith("[")) right.substringAfter("]") else right.substringAfter(",", "")
                 continue
             }
 
@@ -73,7 +79,11 @@ fun firstItem(list: String): String {
 fun remainingItems(list: String): String {
     val removedBraces = removeBraces(list)
     if (removedBraces.startsWith("[")) {
-        return removedBraces.substringAfter("]")
+        var result = removedBraces.substringAfter("]")
+        if (result.startsWith(",")) {
+            result = result.substringAfter(",")
+        }
+        return result
     } else if (!removedBraces.contains(",")) {
         return ""
     }
