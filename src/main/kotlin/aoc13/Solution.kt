@@ -4,7 +4,7 @@ import java.io.File
 import java.lang.Math.max
 
 fun main() {
-    val input = readFile("src/main/kotlin/aoc13/input.txt")
+    val input = readFile("src/main/kotlin/aoc13/input3.txt")
     val packets = input.split("\n\n").map { it.split("\n") }
     println(packets)
 
