@@ -17,20 +17,30 @@ fun main() {
     var result = 0
     orders.forEachIndexed { i, value ->
         run {
-            if (value!!) {
+            if (value > 0) {
                 result += i + 1
             }
         }
     }
     println(result)
+
+    var packets2 = readFile("src/main/kotlin/aoc13/input.txt")
+        .split("\n")
+        .filter { it.isNotEmpty() }.toMutableList()
+    packets2.add("[[2]]")
+    packets2.add("[[6]]")
+
+    packets2 = packets2.sortedWith { o1, o2 -> -compareElements(o1, o2) }.toMutableList()
+
+    println((packets2.indexOf("[[2]]") + 1) * (packets2.indexOf("[[6]]") + 1))
 }
 
-fun compareElements(first: String, second: String): Boolean? {
+fun compareElements(first: String, second: String): Int {
     if (isNumber(first) && isNumber(second)) {
         if (first.toInt() == second.toInt()) {
-            return null
+            return 0
         }
-        return first.toInt() < second.toInt()
+        return second.toInt() - first.toInt()
     } else if (isList(first) && isNumber(second)) {
         return compareElements(first, "[$second]")
     } else if (isNumber(first) && isList(second)) {
@@ -43,21 +53,21 @@ fun compareElements(first: String, second: String): Boolean? {
         var right = remainingItemsNew(second)
 
         if (item1.isEmpty() && item2.isNotEmpty()) {
-            return true
+            return 1
         } else if (item1.isNotEmpty() && item2.isEmpty()) {
-            return false
+            return -1
         }
 
         while (item1 != "" && item2 != "") {
             val comparisonResult = compareElements(item1, item2)
-            if (comparisonResult == null) {
+            if (comparisonResult == 0) {
                 item1 = firstItemNew(left)
                 item2 = firstItemNew(right)
 
                 if (item1.isEmpty() && item2.isNotEmpty()) {
-                    return true
+                    return 1
                 } else if (item1.isNotEmpty() && item2.isEmpty()) {
-                    return false
+                    return -1
                 }
 
                 left = remainingItemsNew(left)
@@ -67,7 +77,7 @@ fun compareElements(first: String, second: String): Boolean? {
                 return comparisonResult
             }
         }
-        return null
+        return 0
     } else {
         throw RuntimeException("wtf")
     }
