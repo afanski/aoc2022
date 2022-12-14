@@ -35,13 +35,26 @@ fun main() {
         }
     }
 
+
+    var output = runOnce(xMin, array)
+    var newOutput = runOnce(xMin, array)
+    var runs = 2
+    while (newOutput != output) {
+        runs++
+        output = newOutput
+        newOutput = runOnce(xMin, array)
+
+        array.forEach {
+            println(it.joinToString(""))
+        }
+        println(runs)
+    }
+}
+
+private fun runOnce(xMin: Int, array: Array<IntArray>): String {
     var startX = 500 - xMin
     var startY = 0
     array[startY][startX] = 2
-
-    array.forEach {
-        println(it.joinToString(""))
-    }
 
     while (nextPosition(startX, startY, array) != null) {
         val next = nextPosition(startX, startY, array)
@@ -51,9 +64,11 @@ fun main() {
         startY = next.second
     }
 
-    array.forEach {
-        println(it.joinToString(""))
-    }
+
+    val result =     array.map {
+        it.joinToString("")
+    }.joinToString("")
+    return result
 }
 
 fun nextPosition(startX: Int, startY: Int, array: Array<IntArray>): Pair<Int, Int>? {
@@ -69,7 +84,7 @@ fun nextPosition(startX: Int, startY: Int, array: Array<IntArray>): Pair<Int, In
         return Pair(startX - 1, startY + 1)
     }
 
-    if (startX + 1 > array.first().size) {
+    if (startX + 1 >= array.first().size) {
         return null
     } else if (array[startY + 1][startX + 1] == 0) {
         return Pair(startX + 1, startY + 1)
