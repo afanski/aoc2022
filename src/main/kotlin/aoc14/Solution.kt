@@ -16,8 +16,8 @@ fun main() {
     println(result)
     val normalized = result.map { it.map { listOf(it.first() - xMin, it.last()) } }
     println(normalized)
-    var array = Array(yMax + 1) { IntArray(xMax - xMin + 1) }
-    normalized.forEach {
+    var array = Array(yMax + 3) { IntArray(xMax * 2) }
+    result.forEach {
         var current: Pair<Int, Int>? = null
         it.forEach {
             if (current == null) {
@@ -34,23 +34,25 @@ fun main() {
             }
         }
     }
+    for (i in 0 until array.first().size) {
+        array[yMax + 2][i] = 1
+    }
 
+    array.forEach {
+        println(it.joinToString(""))
+    }
 
-    var output = runOnce(xMin, array)
-    var runs = 1
-    while (!output.contains("2")) {
+    var runs = 0
+    while (array[0][500] != 3) {
+        runOnce(array)
         runs++
-        output = runOnce(xMin, array)
 
-        array.forEach {
-            println(it.joinToString(""))
-        }
         println(runs)
     }
 }
 
-private fun runOnce(xMin: Int, array: Array<IntArray>): String {
-    var startX = 500 - xMin
+private fun runOnce(array: Array<IntArray>) {
+    var startX = 500
     var startY = 0
     array[startY][startX] = 2
 
@@ -66,12 +68,6 @@ private fun runOnce(xMin: Int, array: Array<IntArray>): String {
             startY = next.second
         }
     }
-
-
-    val result =     array.map {
-        it.joinToString("")
-    }.joinToString("")
-    return result
 }
 
 fun nextPosition(startX: Int, startY: Int, array: Array<IntArray>): Pair<Int, Int>? {
