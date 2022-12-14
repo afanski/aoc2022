@@ -4,7 +4,7 @@ import java.io.File
 import kotlin.math.sign
 
 fun main() {
-    val input = readFile("src/main/kotlin/aoc14/input2.txt")
+    val input = readFile("src/main/kotlin/aoc14/input.txt")
     val result = input.split("\n").map { it.split(" -> ").map { it.split(",").map { it.toInt() } } }
     val xMin = result.map { it.map { it.first() } }.map { it.min() }.min()
     val xMax = result.map { it.map { it.first() } }.map { it.max() }.max()
@@ -37,12 +37,10 @@ fun main() {
 
 
     var output = runOnce(xMin, array)
-    var newOutput = runOnce(xMin, array)
-    var runs = 2
-    while (newOutput != output) {
+    var runs = 1
+    while (!output.contains("2")) {
         runs++
-        output = newOutput
-        newOutput = runOnce(xMin, array)
+        output = runOnce(xMin, array)
 
         array.forEach {
             println(it.joinToString(""))
