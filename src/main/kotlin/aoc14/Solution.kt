@@ -59,9 +59,14 @@ private fun runOnce(xMin: Int, array: Array<IntArray>): String {
     while (nextPosition(startX, startY, array) != null) {
         val next = nextPosition(startX, startY, array)
         array[startY][startX] = 0
-        array[next!!.second][next!!.first] = 2
-        startX = next.first
-        startY = next.second
+        if (next!!.first == -1 && next.second == -1) {
+            array[startY][startX] = 3
+            break
+        } else {
+            array[next!!.second][next!!.first] = 2
+            startX = next.first
+            startY = next.second
+        }
     }
 
 
@@ -90,7 +95,7 @@ fun nextPosition(startX: Int, startY: Int, array: Array<IntArray>): Pair<Int, In
         return Pair(startX + 1, startY + 1)
     }
 
-    return null
+    return Pair(-1, -1)
 }
 
 fun readFile(fileName: String): String = File(fileName).readText(Charsets.UTF_8)
